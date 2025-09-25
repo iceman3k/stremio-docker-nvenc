@@ -4,9 +4,12 @@
 
 [Stremio](https://www.stremio.com/) is a free application which lets you stream your favorite shows and movies.
 
-The Docker images in this repository bundle stremio-server, ffmpeg and web player for you, ready to use in a small Alpine image.
+The Docker images in this repository bundle stremio-server, ffmpeg and web player for you, ready to use in a Ubuntu 22.04 image.
 
-I built this to run Stremio on my Raspberry Pi 5 and couldn't find something that has both player and server but also the official image seemed too big but also lacks the Web Player and doesn't work out of the box if no HTTPS is configured.
+***
+CURRENTLY, YOU HAVE TO BUILD THIS IMAGE FROM DOCKERFILE or DOCKER COMPOSE BUILD
+docker build --no-cache -t stremio-docker-nvenc:latest .
+***
 
 ## Features
 
@@ -41,7 +44,7 @@ And log in again.
 **Option A: Using Docker Compose (Recommended)**
 ```bash
 # Clone the repository
-git clone https://github.com/tsaridas/stremio-docker.git
+git clone https://github.com/iceman3k/stremio-docker-nvenc.git
 cd stremio-docker
 
 # Edit compose.yaml if needed, then run:
@@ -58,7 +61,7 @@ docker run -d \
   -v ./stremio-data:/root/.stremio-server \
   -p 8080:8080/tcp \
   --restart unless-stopped \
-  tsaridas/stremio-docker:latest
+  iceman3k/stremio-docker-nvenc:latest
 ```
 
 The Web UI will now be available on `http://<YOUR_SERVER_IP>:8080`. The streaming server will be auto-configured for you from the URL of the browser you are using to open it.
@@ -107,7 +110,7 @@ docker run -d \
   -e NO_CORS=1 \
   -e AUTO_SERVER_URL=1 \
   -p 8080:8080 \
-  tsaridas/stremio-docker:latest
+  iceman3k/stremio-docker-nvenc:latest
 ```
 Access Stremio at `http://<YOUR_LAN_IP>:8080`.
 
@@ -124,7 +127,7 @@ docker run -d \
   -e IPADDRESS=0.0.0.0 \
   -e AUTO_SERVER_URL=1 \
   -p 8080:8080 \
-  tsaridas/stremio-docker:latest
+  iceman3k/stremio-docker-nvenc:latest
 ```
 The container will generate a certificate and an A record for your public IP. To find the FQDN, look for a `.pem` file in your mounted volume (`~/.stremio-server`).
 
@@ -150,7 +153,7 @@ This is useful for accessing Stremio via HTTPS on your local network. It generat
       -e AUTO_SERVER_URL=1 \
       -p 8080:8080 \
       -v ./stremio-data:/root/.stremio-server \
-      tsaridas/stremio-docker:latest
+      iceman3k/stremio-docker-nvenc:latest
     ```
 5.  Access Stremio at `https://192-168-1-10.519b6502d940.stremio.rocks:8080`.
 
@@ -169,7 +172,7 @@ docker run -d \
   -e AUTO_SERVER_URL=1 \
   -v ./stremio-data:/root/.stremio-server \
   -p 8080:8080 \
-  tsaridas/stremio-docker:latest
+  iceman3k/stremio-docker-nvenc:latest
 ```
 The WebPlayer will be available at `https://your.custom.domain:8080`.
 
@@ -180,7 +183,7 @@ To update to the latest version, simply run:
 ```bash
 docker stop stremio-docker
 docker rm stremio-docker
-docker pull tsaridas/stremio-docker:latest
+docker pull iceman3k/stremio-docker-nvenc:latest
 ```
 
 And then run your `docker run` or `docker compose up -d` command again.
@@ -190,7 +193,7 @@ And then run your `docker run` or `docker compose up -d` command again.
 ### FFMPEG
 
 We build our own ffmpeg from the jellyfin repo (version 4.4.1-4), which includes:
-- Hardware acceleration support for both Intel and AMD (VAAPI)
+- Hardware acceleration support for Nvidia (NVENC), Intel, and AMD (VAAPI)
 - Multiple codec support (H.264, HEVC, VP9, etc.)
 - Optimized for streaming workloads
 
@@ -200,9 +203,33 @@ Hardware acceleration is automatically detected. To enable it, you must expose y
 
 This project includes a fix for NVIDIA NVENC hardware acceleration support in Stremio. The fix involves a wrapper script that corrects an invalid argument passed to FFmpeg by Stremio's `hls-converter`.
 
-A huge credit goes to the `tsaridas/stremio-docker` project, which provided the majority of the code and inspiration for this work.
+A huge credit goes to the `tsaridas/stremio-docker` project, which provided the majority of the code and inspiration for my project.
 
-This project was also assisted by the Gemini CLI and Grok.
+This project was also assisted by Gemini CLI and Grok.
+
+**Docker Compose:**
+```yaml
+services:
+  stremio:
+    # ... your other config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+```
+
+**Docker CLI:**
+```bash
+  docker run -d \
+    # ... your other flags
+    --gpus=all \
+    -e NVIDIA_VISIBLE_DEVICES=all \
+    -e NVIDIA_DRIVER_CAPABILITIES=all \
+    stremio-docker-nvenc:latest
+```
 
 **Support for Intel/AMD GPU Transcoding (VAAPI)**
 
@@ -222,26 +249,26 @@ services:
 docker run -d \
   # ... your other flags
   --device /dev/dri:/dev/dri \
-  tsaridas/stremio-docker:latest
+  iceman3k/stremio-docker-nvenc:latest
 ```
 
 ### Builds
 
 Builds are created for the following architectures:
 - `linux/amd64`
-- `linux/arm/v6`
-- `linux/arm/v7`
-- `linux/arm64/v8`
-- `linux/ppc64le`
+#- `linux/arm/v6`
+#- `linux/arm/v7`
+#- `linux/arm64/v8`
+#- `linux/ppc64le`
 
-Images are automatically built and tested on pull requests using GitHub Actions.
+#Images are automatically built and tested on pull requests using GitHub Actions.
 
 **Build tags:**
 - `latest`: Builds when a new version of the server or Web Player is released.
-- `nightly`: Builds daily from the development branch of the web player.
-- `vX.X.X`: Specific release versions.
+#- `nightly`: Builds daily from the development branch of the web player.
+#- `vX.X.X`: Specific release versions.
 
-Images are hosted on [Docker Hub](https://hub.docker.com/r/tsaridas/stremio-docker).
+#Images are hosted on [Docker Hub](https://hub.docker.com/r/iceman3k/stremio-docker-nvenc).
 
 ### Customizing Local Storage
 
@@ -251,7 +278,7 @@ Stremio's web app stores settings in the browser's local storage. You can pre-co
 docker run -d \
   # ... your other flags
   -v /path/to/your/localStorage.json:/srv/stremio-server/build/localStorage.json \
-  tsaridas/stremio-docker:latest
+  iceman3k/stremio-docker-nvenc:latest
 ```
 
 ### Shell
@@ -289,8 +316,8 @@ The `restart_if_idle.sh` script can restart the Stremio server when it's not in 
 
 ## ToDo
 
-- Build another image with a base that is small and has glibc.
-- Automatically add addons passed from environmental variables.
-- Add nginx CORS for security.
+#- Build another image with a base that is small and has glibc.
+#- Automatically add addons passed from environmental variables.
+#- Add nginx CORS for security.
 
 PRs and Issues are welcome. If you find an issue, please let me know.
