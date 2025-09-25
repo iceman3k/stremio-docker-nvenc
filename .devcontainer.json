@@ -1,6 +1,6 @@
 {
-    "name": "Development with Node.js 18",
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+    "name": "Development with Node.js 20",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
     "customizations": {
       "vscode": {
         "extensions": [
