@@ -1,12 +1,36 @@
 services:
   stremio:
-    image: tsaridas/stremio-docker:latest
+    image: stremio-nvenc:latest
+    container_name: stremio-nvenc
     restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     environment:
-      NO_CORS: 1
-      AUTO_SERVER_URL: 1
-      #IPADDRESS: 192.168.1.10 # Setup your ip address here
+      - PUID: 1000 # Set to your user ID, e.g., 1000
+      - PGID: 1000 # Set to your user and group ID, e.g., 1000:1000
+      - TZ: America/New_York # Set to your timezone, e.g., America/New_York
+      - NVIDIA_VISIBLE_DEVICES: all # Use 'all' or specific GPU ids like '0,1'
+      - NVIDIA_DRIVER_CAPABILITIES: all # Use 'compute,video,graphics' for more restricted access
+      - FFMPEG_HWACCEL: nvenc # Use 'nvenc' for NVIDIA, 'vaapi' for Intel, 'videotoolbox' for Apple Silicon
+      - NO_CORS: 1 # Set to '1' to disable server's cors.
+      - AUTO_SERVER_URL: 1 # Recommended for auto-configuration
+      #- IPADDRESS: 192.168.5.185 # Set to your private LAN IP for Scenario 3, e.g., 192.168.1.10
+      #- SERVER_URL:  # Manually sets the streaming server URL.
+      #- CASTING_DISABLED:  # Set to '1' to disable casting.
+      #- WEBUI_LOCATION:  # Sets the redirect page for web player.
+      #- WEBUI_INTERNAL_PORT: 8080 # Sets the port inside the docker container for the web player.
+      #- APP_PATH:  # Set for custom path for stremio server.
+      #- DOMAIN:  # Set for custom domain for stremio server.
+      #- CERT_FILE:  # Set for custom certificate path.
+      #- USERNAME:  # Set for custom username for http simple authentication.
+      #- PASSWORD:  # Set for custom password for http simple authentication.
+      #- DISABLE_CACHING:  # Set to '1' to disable caching for server.
     ports:
-      - "8080:8080"
+      - 8080:8080/tcp
     volumes:
-      - "./stremio-data:/root/.stremio-server"
+      - ./stremio-data:/root/.stremio-server
