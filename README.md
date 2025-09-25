@@ -9,7 +9,7 @@ The Docker images in this repository bundle stremio-server, ffmpeg and web playe
 ***
 CURRENTLY, YOU HAVE TO BUILD THIS IMAGE FROM DOCKERFILE or DOCKER COMPOSE BUILD \
 docker build --no-cache -t stremio-docker-nvenc:latest . \
-Refferences to iceman3k/stremio-docker-nvenc:latest do not currently work.
+References to iceman3k/stremio-docker-nvenc:latest do not currently work. My hope is they won't have to. I made a comment here in hopes that Stremio will fix the core issue: https://github.com/Stremio/stremio-bugs/issues/1401 which will eventually filter its way into the tsaridas/stremio-docker project.
 ***
 
 ## Features
