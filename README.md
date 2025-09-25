@@ -196,6 +196,14 @@ We build our own ffmpeg from the jellyfin repo (version 4.4.1-4), which includes
 
 Hardware acceleration is automatically detected. To enable it, you must expose your GPU device to the container.
 
+### FFMPEG NVENC Support
+
+This project includes a fix for NVIDIA NVENC hardware acceleration support in Stremio. The fix involves a wrapper script that corrects an invalid argument passed to FFmpeg by Stremio's `hls-converter`.
+
+A huge credit goes to the `tsaridas/stremio-docker` project, which provided the majority of the code and inspiration for this work.
+
+This project was also assisted by the Gemini CLI and Grok.
+
 **Support for Intel/AMD GPU Transcoding (VAAPI)**
 
 If you have a supported Intel or AMD GPU on Linux, you can enable hardware transcoding by passing the `dri` device to the container:

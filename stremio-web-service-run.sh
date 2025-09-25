@@ -1,4 +1,10 @@
-#!/bin/sh -e
+#!/bin/bash
+set -e
+echo "Received arguments: [$@]" >&2
+echo "Number of arguments: $#" >&2
+for i in "$@"; do
+    echo "Argument $i" >&2
+done
 
 CONFIG_FOLDER="${APP_PATH:-${HOME}/.stremio-server/}"
 AUTH_CONF_FILE="/etc/nginx/auth.conf"
@@ -6,7 +12,7 @@ HTPASSWD_FILE="/etc/nginx/.htpasswd"
 
 # check if proxyStreamsEnabled is set to false in server.js and add it if not.
 if ! grep -q 'self.proxyStreamsEnabled = false,' server.js; then
-    sed -i '/self.allTranscodeProfiles = \[\]/a \ \ \ \ \ \ \ \ self.proxyStreamsEnabled = false,' server.js
+    sed -i '/self.allTranscodeProfiles = \[]/a \        self.proxyStreamsEnabled = false,' server.js
 fi
 
 sed -i 's/df -k/df -Pk/g' server.js
@@ -57,5 +63,7 @@ elif [ -n "${CERT_FILE}" ]; then
         node certificate.js --action load --pem-path "/srv/stremio-server/certificates.pem" --domain "${DOMAIN}" --json-path "${CONFIG_FOLDER}httpsCert.json"
     fi
 fi
+echo "Starting node server.js" >&2
 node server.js &
+echo "Starting nginx" >&2
 start_http_server

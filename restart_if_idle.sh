@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # URL to check
 URL="http://localhost:11470/stats.json"
