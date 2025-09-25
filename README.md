@@ -7,8 +7,9 @@
 The Docker images in this repository bundle stremio-server, ffmpeg and web player for you, ready to use in a Ubuntu 22.04 image.
 
 ***
-CURRENTLY, YOU HAVE TO BUILD THIS IMAGE FROM DOCKERFILE or DOCKER COMPOSE BUILD
-docker build --no-cache -t stremio-docker-nvenc:latest .
+CURRENTLY, YOU HAVE TO BUILD THIS IMAGE FROM DOCKERFILE or DOCKER COMPOSE BUILD \
+docker build --no-cache -t stremio-docker-nvenc:latest . \
+Refferences to iceman3k/stremio-docker-nvenc:latest do not currently work.
 ***
 
 ## Features
