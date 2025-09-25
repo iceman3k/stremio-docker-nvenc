@@ -16,7 +16,6 @@ services:
       - TZ: America/New_York # Set to your timezone, e.g., America/New_York
       - NVIDIA_VISIBLE_DEVICES: all # Use 'all' or specific GPU ids like '0,1'
       - NVIDIA_DRIVER_CAPABILITIES: all # Use 'compute,video,graphics' for more restricted access
-      - FFMPEG_HWACCEL: nvenc # Use 'nvenc' for NVIDIA, 'vaapi' for Intel, 'videotoolbox' for Apple Silicon
       - NO_CORS: 1 # Set to '1' to disable server's cors.
       - AUTO_SERVER_URL: 1 # Recommended for auto-configuration
       #- IPADDRESS: 192.168.5.185 # Set to your private LAN IP for Scenario 3, e.g., 192.168.1.10
