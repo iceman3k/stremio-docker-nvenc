@@ -46,7 +46,7 @@ And log in again.
 ```bash
 # Clone the repository
 git clone https://github.com/iceman3k/stremio-docker-nvenc.git
-cd stremio-docker
+cd stremio-docker-nvenc
 
 # Edit compose.yaml if needed, then run:
 docker compose up -d
@@ -56,7 +56,7 @@ The compose file includes common settings like `NO_CORS: 1` and `AUTO_SERVER_URL
 **Option B: Using Docker Run**
 ```bash
 docker run -d \
-  --name=stremio-docker \
+  --name=stremio-docker-nvenc \
   -e NO_CORS=1 \
   -e AUTO_SERVER_URL=1 \
   -v ./stremio-data:/root/.stremio-server \
@@ -107,7 +107,7 @@ This is the easiest option and works on your local network without needing a pub
 
 ```bash
 docker run -d \
-  --name=stremio-docker \
+  --name=stremio-docker-nvenc \
   -e NO_CORS=1 \
   -e AUTO_SERVER_URL=1 \
   -p 8080:8080 \
@@ -124,7 +124,7 @@ This option automatically gets a certificate for a `*.stremio.rocks` subdomain a
 
 ```bash
 docker run -d \
-  --name=stremio-docker \
+  --name=stremio-docker-nvenc \
   -e IPADDRESS=0.0.0.0 \
   -e AUTO_SERVER_URL=1 \
   -p 8080:8080 \
@@ -149,7 +149,7 @@ This is useful for accessing Stremio via HTTPS on your local network. It generat
 4.  Run the container:
     ```bash
     docker run -d \
-      --name=stremio-docker \
+      --name=stremio-docker-nvenc \
       -e IPADDRESS=192.168.1.10 \
       -e AUTO_SERVER_URL=1 \
       -p 8080:8080 \
@@ -167,7 +167,7 @@ If you have your own domain and SSL certificate, you can use them directly.
 
 ```bash
 docker run -d \
-  --name=stremio-docker \
+  --name=stremio-docker-nvenc \
   -e DOMAIN=your.custom.domain \
   -e CERT_FILE=certificate.pem \
   -e AUTO_SERVER_URL=1 \
@@ -182,8 +182,8 @@ The WebPlayer will be available at `https://your.custom.domain:8080`.
 To update to the latest version, simply run:
 
 ```bash
-docker stop stremio-docker
-docker rm stremio-docker
+docker stop stremio-docker-nvenc
+docker rm stremio-docker-nvenc
 docker pull iceman3k/stremio-docker-nvenc:latest
 ```
 
@@ -203,10 +203,6 @@ Hardware acceleration is automatically detected. To enable it, you must expose y
 ### FFMPEG NVENC Support
 
 This project includes a fix for NVIDIA NVENC hardware acceleration support in Stremio. The fix involves a wrapper script that corrects an invalid argument passed to FFmpeg by Stremio's `hls-converter`.
-
-A huge credit goes to the `tsaridas/stremio-docker` project, which provided the majority of the code and inspiration for my project.
-
-This project was also assisted by Gemini CLI and Grok.
 
 **Docker Compose:**
 ```yaml
@@ -322,3 +318,7 @@ The `restart_if_idle.sh` script can restart the Stremio server when it's not in 
 #- Add nginx CORS for security.
 
 PRs and Issues are welcome. If you find an issue, please let me know.
+
+## Thank You
+A huge credit goes to the `tsaridas/stremio-docker` project, which provided the majority of the code and inspiration for my project.
+This project was also assisted by Gemini CLI and Grok.
