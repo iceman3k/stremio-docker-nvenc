@@ -13,7 +13,7 @@ References to iceman3k/stremio-docker-nvenc:latest do not currently work. My hop
 ***
 
 !!!
-This build uses Cuda 12.3 to configure Jellyfin-FFMPEG. Therefore, only the following GPU series will work: GTX 1000, RTX 2000-4000.
+This build uses Cuda 12.3 to configure Jellyfin-FFMPEG. Therefore, only the following GPU series will work: GTX 1000, RTX 2000-4000, Tesla P100, A100.
 !!!
 
 ## Features
