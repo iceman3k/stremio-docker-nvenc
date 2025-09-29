@@ -12,6 +12,10 @@ docker build --no-cache -t stremio-docker-nvenc:latest . \
 References to iceman3k/stremio-docker-nvenc:latest do not currently work. My hope is they won't have to. I made a comment here in hopes that Stremio will fix the core issue https://github.com/Stremio/stremio-bugs/issues/1401#issuecomment-3334778243 which will eventually filter its way into the tsaridas/stremio-docker project.
 ***
 
+!!!
+This build uses Cuda 12.3 to configure Jellyfin-FFMPEG. Therefore, only the following GPU series will work: GTX 1000, RTX 2000-4000.
+!!!
+
 ## Features
 
 - **All-in-One:** Bundles Stremio server, web player, and ffmpeg in a single container.
